@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainMenu> </MainMenu>
+    <MainMenu v-if="this.$router.currentRoute.name != 'LoginEntry'"> </MainMenu>
     <!-- <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>

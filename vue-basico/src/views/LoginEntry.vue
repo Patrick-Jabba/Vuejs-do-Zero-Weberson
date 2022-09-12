@@ -10,7 +10,8 @@
     ><br />
     <CustomButton 
     value="ENTRAR" 
-    :callback="() => disparar()"> </CustomButton>
+    :callback="() => login()"> 
+    </CustomButton>
   </div>
 </template>
 
@@ -30,8 +31,8 @@ export default {
     };
   },
   methods: {
-    disparar() {
-      alert("Fui clicado!");
+    login() {
+      this.$router.push({path:'/'});
     },
   },
 };
@@ -50,5 +51,6 @@ export default {
 .logo {
   color: var(--primary-color);
   text-align: center;
+  font-size: 22px;
 }
 </style>
