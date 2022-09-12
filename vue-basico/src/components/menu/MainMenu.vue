@@ -4,13 +4,13 @@
       <a @click="() => this.$router.push({path:'/'})">Dashboard</a>
     </li>
     <li>
-      <a to="/product-control">Produtos</a>
+      <a @click="() => this.$router.push({path:'/product-control'})">Produtos</a>
     </li>
     <li>
-      <a to="/client-control">Clientes</a>
+      <a @click="() => this.$router.push({path:'/client-control'})">Clientes</a>
     </li>
     <li>
-      <a to="/login">Logout</a>
+      <a @click="() => this.$router.push({path:'/login'})">Logout</a>
     </li>
   </ul>
 </template>
@@ -47,5 +47,7 @@ li a {
 
 li a:hover{
   background-color:var(--secondary-color);
+  cursor: pointer;
 }
+
 </style>
