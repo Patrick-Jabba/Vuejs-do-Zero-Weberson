@@ -2,7 +2,7 @@ import LoginEntry from '@/views/LoginEntry.vue';
 import DashboardPanel from '@/views/DashboardPanel.vue';
 import ProductControl from '@/views/ProductControl.vue';
 import ClientControl from '@/views/ClientControl.vue';
-
+import ProductsAdd from '@/views/ProductsAdd.vue';
 const routes = [
     {
         path: '/login',
@@ -27,6 +27,24 @@ const routes = [
         name: 'ProductControl',
         component: ProductControl,
         title: 'Products',
+        meta: {
+            requiredAuth: true,
+        }
+    },
+    {
+        path: '/product-control/new',
+        name: 'New Product',
+        component: ProductsAdd,
+        title: 'Adicionar Produto',
+        meta: {
+            requiredAuth: true,
+        }
+    },
+    {
+        path: '/product-control/editar',
+        name: 'Edit Product',
+        component: ProductsAdd,
+        title: 'Editar Produto',
         meta: {
             requiredAuth: true,
         }

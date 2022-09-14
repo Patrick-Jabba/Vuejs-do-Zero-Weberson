@@ -34,6 +34,12 @@ body {
   font-family: "Quicksand", sans-serif;
 }
 
+.titulo {
+  font-weight: 600;
+  color: #363636;
+  font-size: 25px;
+}
+
 .container {
   margin-top: 15px;
 }
@@ -49,5 +55,25 @@ hr {
 
 .sub-container {
   margin-top: 15px;
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-primary:visited,
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--primary-color);
+  border: var(--primary-color);
+  outline: none;
+  box-shadow: none;
+  color: #fff;
+  min-width: 90px;
+}
+
+.btn-primary:hover{
+  background-color: var(--secondary-color);
+  color: #fff;
+  border-color: var(--secondary-color);
 }
 </style>
