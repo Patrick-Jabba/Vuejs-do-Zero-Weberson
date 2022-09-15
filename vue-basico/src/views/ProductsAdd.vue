@@ -91,9 +91,14 @@
       </div>
 
       <div class="col-sm-12">
-        <div class="form-check-inline">
+        <div v-show="modoCadastro" class="form-check-inline">
           <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" value="" />
+            <input
+              v-model="continuarAdicionando"
+              type="checkbox"
+              class="form-check-input"
+              value=""
+            />
             Continuar adicionando
           </label>
         </div>
@@ -112,6 +117,7 @@
 <script>
 import Product from "@/models/Product";
 import produtoService from "../services/product-service";
+import conversorData from "@/utils/conversor-data";
 
 export default {
   name: "ProductsAdd",
@@ -119,6 +125,7 @@ export default {
     return {
       produto: new Product(),
       modoCadastro: true,
+      continuarAdicionando: false,
     };
   },
   mounted() {
@@ -137,10 +144,97 @@ export default {
           this.produto = new Product(response.data);
         })
         .catch((error) => {
+          this.$swal({
+          icon: 'error',
+          title:"Não foi possível obter o produto pelo id, tente novamente mais tarde!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        });
           console.log(error);
         });
     },
-    saveProduct() {},
+
+    registerProduct() {
+      if (!this.produto.validModelToRegister()) {
+        this.$swal({
+          icon: 'warning',
+          title:"O nome do produto é obrigatório para cadastro!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        })
+        return;
+      }
+
+      this.produto.dataCadastro = conversorData.dateToISOEUA(
+        this.produto.dataCadastro
+      );
+
+      produtoService
+        .createProduct(this.produto)
+        .then(() => {
+          this.$swal({
+            icon: "success",
+            title: "Produto cadastrado com sucesso!",
+            confirmButtonColor: '#FF3D00',
+            animate: true,
+          });
+          this.produto = new Product();
+
+          if (!this.continuarAdicionando) {
+            this.$router.push({ name: "ProductControl" });
+          }
+        })
+        .catch((error) => {
+          this.$swal({
+          icon: 'error',
+          title:"Não foi possível cadastrar o produto!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        });
+          console.log(error);
+        });
+    },
+
+    updateProduct() {
+      if (!this.produto.validModelToUpdate()) {
+        this.$swal({
+          icon: 'warning',
+          title:"O código e o nome do produto são obrigatórios para o cadastro!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        })
+      }
+
+      this.produto.dataCadastro = conversorData.dateToISOEUA(
+        this.produto.dataCadastro
+      );
+
+      produtoService
+        .updateProduct(this.produto)
+        .then(() => {
+          this.$swal({
+          icon: 'success',
+          title:"Produto atualizado com sucesso!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        })
+          this.$router.push({ name: "ProductControl" });
+        })
+        .catch((error) => {
+          this.$swal({
+          icon: 'error',
+          title:"Não foi possível atualizar o produto!",
+          confirmButtonColor: '#FF3D00',
+          animate: true, 
+        });
+        console.log(error)
+        });
+    },
+
+    saveProduct() {
+      this.modoCadastro ? this.registerProduct() : this.updateProduct();
+    },
+
     cancelAction() {
       this.produto = new Product();
       this.$router.push({ name: "ProductControl" });
