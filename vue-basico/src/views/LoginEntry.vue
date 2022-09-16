@@ -2,8 +2,6 @@
   <div class="box-login">
     <div class="logo">
       <h1>{{ mensagem }}</h1>
-      {{ usuario.email }}
-      {{ usuario.senha }}
     </div>
     <InputLogin
       label="E-mail"
@@ -31,6 +29,7 @@ import InputLogin from "@/components/input/InputLogin.vue";
 import CustomButton from "@/components/button/CustomButton.vue";
 import User from "../models/User";
 import userService from "../services/user-service";
+import Storage from '../utils/storage';
 
 export default {
   name: "LoginEntry",
@@ -59,7 +58,12 @@ export default {
 
       userService.login(this.usuario.email, this.usuario.senha)
         .then((response) => {
-          console.log(response);
+          this.usuario = new User(response.data.usuario);
+
+          Storage.saveUserInLocalStorage(this.usuario);
+          Storage.saveTokenInStorage(response.data.token);
+
+          this.$router.push({name: 'ProductControl'})
         })
         .catch((error) => {
           console.log(error);

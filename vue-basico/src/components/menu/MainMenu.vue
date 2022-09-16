@@ -1,19 +1,58 @@
 <template>
   <ul class="menu">
     <li>
-      <a @click="() => this.$router.push({path:'/'})">Dashboard</a>
+      <a @click="() => this.$router.push({ path: '/' })">Dashboard</a>
     </li>
     <li>
-      <a @click="() => this.$router.push({path:'/product-control'})">Produtos</a>
+      <a @click="() => this.$router.push({ path: '/product-control' })"
+        >Produtos</a
+      >
     </li>
     <li>
-      <a @click="() => this.$router.push({path:'/client-control'})">Clientes</a>
+      <a @click="() => this.$router.push({ path: '/client-control' })"
+        >Clientes</a
+      >
     </li>
     <li>
-      <a @click="() => this.$router.push({path:'/login'})">Logout</a>
+      <a @click="logout">Logout</a>
     </li>
   </ul>
 </template>
+
+<script>
+import Storage from "../../utils/storage";
+import userService from "../../services/user-service";
+
+export default {
+  name: "MainMenu",
+  data() {
+    return {};
+  },
+  methods: {
+    logout() {
+      userService
+        .logout()
+        .then(() => {
+          Storage.removeUserFromStorage();
+          Storage.removeTokenFromStorage();
+          this.$swal({
+            icon: "success",
+            title: "Logout efetuado com sucesso!",
+            confirmButtonColor: "#FF3D00",
+          });
+          this.$router.push({ path: "/login" });
+        })
+        .catch(() => {
+          this.$swal({
+            icon: "error",
+            title: "Erro ao efetuar logout, tente novamente.",
+            animate: true,
+          });
+        });
+    },
+  },
+};
+</script>
 
 <style scoped>
 ul {
@@ -45,9 +84,8 @@ ul.menu li a {
   text-align: center;
 }
 
-li a:hover{
-  background-color:var(--secondary-color);
+li a:hover {
+  background-color: var(--secondary-color);
   cursor: pointer;
 }
-
 </style>
