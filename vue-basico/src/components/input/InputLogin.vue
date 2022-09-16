@@ -2,29 +2,32 @@
   <div>
     <label for="">{{ label }}</label
     ><br />
-    <input :type="type" :placeholder="placeholder" />
+    <input :type="type" :placeholder="placeholder" v-model="inputValue" />
   </div>
 </template>
 
 <script>
 export default {
   name: "InputLogin",
+  model: {
+    prop: "value",
+    event: "onChange",
+  },
   props: {
-    label: {
-      type: String,
-      require,
-    },
-    placeholder: {
-      type: String,
-      default: "",
-    },
-    type: {
-      type: String,
-      default: "text",
-    },
+    label: { type: String, default: '', require },
+    placeholder: { default: '' },
+    type: { type: String, default: 'text' },
+    value: { type: String, default: '' },
   },
   data() {
-    return {};
+    return {
+      inputValue: this.value,
+    };
+  },
+  watch: {
+    inputValue() {
+      this.$emit('onChange', this.inputValue);
+    }
   },
 };
 </script>

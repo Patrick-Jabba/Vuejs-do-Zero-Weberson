@@ -11,6 +11,11 @@
       <div class="col-sm-2">
         <CustomButton :callback="addProduct" value="Adicionar"></CustomButton>
       </div>
+      <div class="col-sm-10">
+        <a @click="goToListInCard" class="float-right card-list"
+          >Ver a listagem em cards</a
+        >
+      </div>
     </div>
 
     <div class="row">
@@ -53,25 +58,14 @@
 
 <script>
 import CustomButton from "../components/button/CustomButton.vue";
-import produtoService from "../services/product-service";
-import Produto from "../models/Product";
-import dateConversor from "../utils/conversor-data";
-import conversorCoin from "../utils/conversor-coin";
+import MixinProduct from "../mixins/produto-mixin";
 
 export default {
   name: "ProductControl",
+  mixins: [MixinProduct],
   components: { CustomButton },
-  filters: {
-    dataFilter(data) {
-      return dateConversor.dateToISO(data);
-    },
-    real(valor) {
-      return conversorCoin.toCustomReal(valor);
-    },
-  },
   data() {
     return {
-      produtos: [],
       mensagem: "Produtos",
     };
   },
@@ -79,54 +73,9 @@ export default {
     addProduct() {
       this.$router.push({ name: "New Product" });
     },
-    editProduct(item) {
-      this.$router.push({ name: "Edit Product", params: { id: item.id } });
-    },
-    deleteProduct(item) {
-      this.$swal({
-        title: "Deseja excluir o produto?",
-        text: `Código ${item.id} - Nome ${item.nome}`,
-        showCancelButton: true,
-        confirmButtonText: "Confirmar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#FF3D00",
-        animate: true,
-        icon: "question",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          produtoService
-            .deleteProduct(item.id)
-            .then(() => {
-              let index = this.produtos.findIndex(
-                (produto) => item.id === produto.id
-              );
-              this.produtos.splice(index, 1);
 
-              this.$swal({
-                icon: "success",
-                title: "Produto excluído com sucesso!",
-                confirmButtonColor: "#FF3D00",
-                animate: true,
-              });
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
-    },
-
-    getAllProducts() {
-      produtoService
-        .getAllProducts()
-        .then((response) => {
-          let produtos = response.data.map((p) => new Produto(p));
-
-          this.produtos = produtos.reverse();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    goToListInCard() {
+      this.$router.push({ name: "ProductListCard" });
     },
   },
   mounted() {
@@ -136,10 +85,15 @@ export default {
 </script>
 
 <style scoped>
-.table-icons {
+.table-icons,
+.card-list {
   margin: 5px;
   cursor: pointer;
   color: var(--primary-color);
+}
+
+.card-list {
+  margin-top: 25px;
 }
 </style>
 

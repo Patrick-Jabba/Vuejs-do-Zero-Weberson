@@ -2,22 +2,35 @@
   <div class="box-login">
     <div class="logo">
       <h1>{{ mensagem }}</h1>
+      {{ usuario.email }}
+      {{ usuario.senha }}
     </div>
-    <InputLogin label="E-mail" type="email" placeholder="exemplo@gmail.com">
+    <InputLogin
+      label="E-mail"
+      type="email"
+      placeholder="exemplo@gmail.com"
+      v-model="usuario.email"
+    >
     </InputLogin>
     <br />
-    <InputLogin label="Senha" type="password" placeholder="123456"> </InputLogin
-    ><br />
-    <CustomButton 
-    value="ENTRAR" 
-    :callback="() => login()"> 
-    </CustomButton>
+    <InputLogin
+      label="Senha"
+      type="password"
+      placeholder="ahsgd123%"
+      v-model="usuario.senha"
+    >
+    </InputLogin>
+    <br />
+
+    <CustomButton value="ENTRAR" :callback="() => login()"> </CustomButton>
   </div>
 </template>
 
 <script>
 import InputLogin from "@/components/input/InputLogin.vue";
 import CustomButton from "@/components/button/CustomButton.vue";
+import User from "../models/User";
+import userService from "../services/user-service";
 
 export default {
   name: "LoginEntry",
@@ -28,11 +41,33 @@ export default {
   data() {
     return {
       mensagem: "Login",
+      usuario: new User(),
     };
   },
   methods: {
     login() {
-      this.$router.push({path:'/'});
+      if (!this.usuario.validUserLoginModel()) {
+        this.$swal({
+          icon: "warning",
+          title: "Email e senha são obrigatórios.",
+          confirmButtonColor: "#FF3D00",
+          animate: true,
+        });
+
+        return;
+      }
+
+      userService.login(this.usuario.email, this.usuario.senha)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.$router.push({ name: "ProductControl" });
+    },
+    recebendoValor(valor) {
+      alert(valor);
     },
   },
 };
